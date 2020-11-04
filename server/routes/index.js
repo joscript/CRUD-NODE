@@ -24,20 +24,22 @@ router.get('/:id', async (req, res, next) => {
 })
 
 router.post('/', async (req, res, next) => {
+    if(!req.body.first_name || !req.body.last_name) return res.status(422).json('First name and last name fields cant be empty!');
     try {
-        let results = await db.create(`'${req.body.first_name}', '${req.body.last_name}'`);    
-        res.json(results);
+        await db.create(`'${req.body.first_name}', '${req.body.last_name}'`);    
+        res.status(200).json(req.body);
     } catch(e) {   
         console.log(e);
         res.sendStatus(500);
     }
-}); 
+});
 
 router.put('/:id', async (req, res, next) => {
+    if(!req.body.first_name || !req.body.last_name) return res.status(422).json('First name and last name fields cant be empty!');
     const data = `first_name = '${req.body.first_name}', last_name = '${req.body.last_name}'`;
     try {
-        let results = await db.update(req.params.id, data);    
-        res.json(results);
+        await db.update(req.params.id, data);    
+        res.status(200).json('User succesfully updated');
     } catch(e) {   
         console.log(e);
         res.sendStatus(500);    
@@ -46,8 +48,8 @@ router.put('/:id', async (req, res, next) => {
 
 router.delete('/:id', async (req, res, next) => {
     try {
-        let results = await db.delete(req.params.id);    
-        res.json(results);
+        await db.delete(req.params.id);    
+        res.status(200).json('User succesfully deleted');
     } catch(e) {   
         console.log(e);
         res.sendStatus(500);    
